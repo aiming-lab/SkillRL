@@ -1,0 +1,452 @@
+{
+  "general_skills": [
+    {
+      "skill_id": "gen_001",
+      "title": "Prioritize Core Keywords",
+      "principle": "Include the product type, 1-2 key functional attributes, and any hard constraints (price, size, color) in the search query; omit secondary descriptors to avoid over-constraining.",
+      "when_to_apply": "Before issuing the first search or when refining an over-specific query that yields few/irrelevant results."
+    },
+    {
+      "skill_id": "gen_002",
+      "title": "Iterative Query Refinement",
+      "principle": "If top results are irrelevant, adjust keywords (add/remove terms or use synonyms) or apply site filters instead of repeating the same query.",
+      "when_to_apply": "After a search results page shows mostly off-target items or repeats despite multiple identical searches."
+    },
+    {
+      "skill_id": "gen_003",
+      "title": "Scan Before You Click",
+      "principle": "Read product titles, thumbnails, and prices in the results list to ensure the item plausibly meets core constraints before opening it.",
+      "when_to_apply": "On any search results page when deciding which product link to open next."
+    },
+    {
+      "skill_id": "gen_004",
+      "title": "Verify Early, Abort Fast",
+      "principle": "On the product page, immediately check category, core attributes, and price; if a key constraint is violated, leave the page at once.",
+      "when_to_apply": "Within the first observation on every product detail page."
+    },
+    {
+      "skill_id": "gen_005",
+      "title": "Set Mandatory Variants",
+      "principle": "Always select required variant options (size, color, capacity, etc.) before evaluating price or purchasing.",
+      "when_to_apply": "After confirming the product type matches and before any purchase action."
+    },
+    {
+      "skill_id": "gen_006",
+      "title": "Confirm Hidden Attributes",
+      "principle": "Open the Description/Features section to ensure non-visible specs (e.g., material, wash method, slip resistance) meet constraints; skip item if unconfirmed.",
+      "when_to_apply": "When a constraint is not evident from the title, images, or variant list."
+    },
+    {
+      "skill_id": "gen_007",
+      "title": "Check Variant Pricing",
+      "principle": "For products showing a price range, select the exact variant combination and verify its specific price is within budget before buying.",
+      "when_to_apply": "Whenever the price is shown as a range or changes with variant selection."
+    },
+    {
+      "skill_id": "gen_008",
+      "title": "Avoid Option Loops",
+      "principle": "If changing variants yields no path to meeting all constraints, stop toggling and return to search rather than looping on the same product.",
+      "when_to_apply": "After two-three unsuccessful variant changes on the same page."
+    },
+    {
+      "skill_id": "gen_009",
+      "title": "Use Result Pagination",
+      "principle": "If the first result page lacks suitable items, navigate to additional pages or adjust sorting/filters before concluding unavailability.",
+      "when_to_apply": "When initial results are insufficient and additional pages are indicated."
+    },
+    {
+      "skill_id": "gen_010",
+      "title": "Respect Constraint Hierarchy",
+      "principle": "Treat product type, category, and hard limits (price, size, color) as non-negotiable; secondary preferences can be used to rank but not override these.",
+      "when_to_apply": "Whenever evaluating whether to open or purchase a candidate item."
+    },
+    {
+      "skill_id": "gen_011",
+      "title": "Conclude When Necessary",
+      "principle": "After exhaustive search and reasonable refinements yield no matching product, stop and report failure instead of endless retries.",
+      "when_to_apply": "When multiple varied searches and pages produce no viable candidates within remaining steps."
+    },
+    {
+      "skill_id": "gen_012",
+      "title": "One Good Click Rule",
+      "principle": "Limit inspection of clearly mismatched items to a single quick check; prioritize exploring new candidates over re-opening the same unsuitable product.",
+      "when_to_apply": "If a product has already been deemed unsuitable once."
+    },
+    {
+      "skill_id": "gen_013",
+      "title": "Purchase Decisively",
+      "principle": "Once all constraints are confirmed on a variant and price fits, execute 'Buy Now' without unnecessary further navigation.",
+      "when_to_apply": "After validating every constraint on the current product variant."
+    },
+    {
+      "skill_id": "gen_014",
+      "title": "Documented Attribute Search",
+      "principle": "When a critical attribute (e.g., \u2018tuxedo\u2019, \u2018butt lifting\u2019) isn\u2019t filterable, keep the query concise but include that keyword to improve precision.",
+      "when_to_apply": "During initial or refined searches targeting attributes not covered by site filters."
+    },
+    {
+      "skill_id": "gen_015",
+      "title": "Fallback to Best Match",
+      "principle": "If no product meets every constraint, consider nearest matches that satisfy all hard constraints and most secondary ones, noting any unmet soft attributes.",
+      "when_to_apply": "Near task limit when exact match is absent but partial matches exist."
+    }
+  ],
+  "task_specific_skills": {
+    "apparel": [
+      {
+        "skill_id": "app_001",
+        "title": "Focus Key Query",
+        "principle": "Include only product type + must-have attributes (gender, garment, fabric, sleeve/fit, price cap) in the search; drop minor or redundant terms to widen relevant results.",
+        "when_to_apply": "Before issuing or refining any search query."
+      },
+      {
+        "skill_id": "app_002",
+        "title": "Validate Core Match",
+        "principle": "On every product page, confirm the title/category matches the requested garment type and primary attributes; if not, immediately return to results.",
+        "when_to_apply": "Right after opening a product detail page."
+      },
+      {
+        "skill_id": "app_003",
+        "title": "Set Variants First",
+        "principle": "Always select the required size and color options before evaluating price or purchasing to ensure the exact variant meets constraints.",
+        "when_to_apply": "Upon landing on a relevant product page with selectable options."
+      },
+      {
+        "skill_id": "app_004",
+        "title": "Check Variant Price",
+        "principle": "After choosing size/color, verify the displayed price for that specific variant is within budget; abandon if it exceeds the limit.",
+        "when_to_apply": "Immediately after variant selection and before clicking buy."
+      },
+      {
+        "skill_id": "app_005",
+        "title": "Confirm Hidden Specs",
+        "principle": "Scroll to bullet points/description to verify non-title attributes (material, care, fit, design features); reject items lacking evidence.",
+        "when_to_apply": "Before purchase on a candidate product where attributes aren\u2019t obvious in the title."
+      },
+      {
+        "skill_id": "app_006",
+        "title": "Adaptive Search Loop",
+        "principle": "If top results are irrelevant, alter search by removing rare constraints or scanning more pages instead of repeating identical queries or cycling one bad product.",
+        "when_to_apply": "After an initial search yields no suitable items or only mismatches."
+      }
+    ],
+    "footwear": [
+      {
+        "skill_id": "foo_001",
+        "title": "Load Search Constraints",
+        "principle": "Include all hard filters (type, function, color, size, price cap) directly in the initial search query to surface only viable footwear candidates.",
+        "when_to_apply": "Before the first search or whenever starting a new search cycle."
+      },
+      {
+        "skill_id": "foo_002",
+        "title": "Verify Key Features",
+        "principle": "Open the product description/specs to explicitly confirm required functional attributes (e.g., slip-resistant, rubber sole) before moving toward purchase.",
+        "when_to_apply": "Immediately after opening a product page and before selecting variants or buying."
+      },
+      {
+        "skill_id": "foo_003",
+        "title": "Select Variants First",
+        "principle": "Always choose the requested color and size options on the product page prior to any purchase action to ensure the exact variant meets constraints.",
+        "when_to_apply": "Once a candidate product page is open and verified for required features."
+      },
+      {
+        "skill_id": "foo_004",
+        "title": "Check Variant Price",
+        "principle": "Confirm the displayed price for the chosen size/color is strictly below the user\u2019s maximum before clicking \u201cBuy Now,\u201d especially when ranges are shown.",
+        "when_to_apply": "After selecting variants and just before initiating checkout."
+      },
+      {
+        "skill_id": "foo_005",
+        "title": "Exit Non-Matches Fast",
+        "principle": "If a product or result page clearly violates any hard constraint, back out immediately instead of toggling options or repeating identical searches.",
+        "when_to_apply": "Upon noticing missing attributes, wrong category, unavailable size/color, or over-budget price."
+      }
+    ],
+    "home_decor": [
+      {
+        "skill_id": "hom_001",
+        "title": "Encode All Constraints",
+        "principle": "Include product type plus every known color, size, shape, feature, and price limit in the initial search query to surface the most relevant home-decor items.",
+        "when_to_apply": "Whenever beginning a search or when current results lack items meeting multiple stated attributes."
+      },
+      {
+        "skill_id": "hom_002",
+        "title": "Verify Product Category",
+        "principle": "Before investing time configuring options or purchasing, ensure the item\u2019s category (e.g., pillow, rug, furniture set) matches the user\u2019s requested product type and room usage.",
+        "when_to_apply": "Immediately after opening a product page from search results."
+      },
+      {
+        "skill_id": "hom_003",
+        "title": "Use Variant Selectors",
+        "principle": "Systematically choose color, size, shape, and other visible variants on the product page, confirming that each selection updates the listing to match user constraints and price.",
+        "when_to_apply": "After landing on a potentially suitable product that offers configurable attributes."
+      },
+      {
+        "skill_id": "hom_004",
+        "title": "Open Details For Hidden Specs",
+        "principle": "Expand Description, Features, or Specs tabs to confirm less-visible requirements (e.g., material, washability, printing method) that aren\u2019t obvious from titles and thumbnails.",
+        "when_to_apply": "When any user constraint is not directly visible in the main listing or variant options."
+      },
+      {
+        "skill_id": "hom_005",
+        "title": "Avoid Product Loops",
+        "principle": "If a candidate fails any constraint after inspection, return to results or refine the query; do not repeatedly reopen or re-filter the same non-qualifying product.",
+        "when_to_apply": "After verifying a product and finding a mismatch with any required attribute."
+      },
+      {
+        "skill_id": "hom_006",
+        "title": "Confirm All Then Commit",
+        "principle": "Proceed to \u2018Buy Now\u2019 only after every user constraint\u2014type, attributes, and price\u2014has been positively confirmed; otherwise continue searching.",
+        "when_to_apply": "Right before clicking the purchase button on a configured product page."
+      }
+    ],
+    "electronics": [
+      {
+        "skill_id": "ele_001",
+        "title": "Constraint-Rich Search",
+        "principle": "Pack product type plus every mandatory attribute (features, color, size, price cap) into the initial search string to surface only highly relevant electronics items.",
+        "when_to_apply": "Whenever starting a new product hunt or refining after poor results."
+      },
+      {
+        "skill_id": "ele_002",
+        "title": "Configure In-Page Variants",
+        "principle": "Once on a promising product page, immediately set color, size/pack, and other variant selectors to test if the SKU can meet all requested specs.",
+        "when_to_apply": "Right after opening a candidate item from search results."
+      },
+      {
+        "skill_id": "ele_003",
+        "title": "Hard-Gate Price & Specs",
+        "principle": "Before proceeding to buy, cross-check the displayed title, specs, and price; abandon any item that exceeds the budget or lacks the exact requested feature set.",
+        "when_to_apply": "After configuring variants but before clicking \u201cBuy Now.\u201d"
+      },
+      {
+        "skill_id": "ele_004",
+        "title": "Bail on Mismatch Fast",
+        "principle": "If variant clicks don\u2019t update the product details to the required spec, or if the page remains wrong, use \u201cBack to results\u201d and seek another item instead of retrying the same option.",
+        "when_to_apply": "When repeated option clicks leave title/specs unchanged or incompatible."
+      },
+      {
+        "skill_id": "ele_005",
+        "title": "Prioritize High-Match Results",
+        "principle": "Scan the result list for items whose titles show all key constraints; open those first, rather than settling for the earliest but partial match.",
+        "when_to_apply": "On any search results page with multiple potential electronics products."
+      },
+      {
+        "skill_id": "ele_006",
+        "title": "Avoid Click Loops",
+        "principle": "Track visited products and queries; if progress stalls, refine the search or change items instead of cycling between the same pages.",
+        "when_to_apply": "After revisiting a page or running an identical search without new insights."
+      }
+    ],
+    "accessories": [
+      {
+        "skill_id": "acc_001",
+        "title": "Constraint-Packed Search",
+        "principle": "Compose the initial search query by combining the accessory type with every known constraint (color, size, price cap, material, washability) to surface only viable candidates.",
+        "when_to_apply": "Before the first search when the user provides multiple specific requirements."
+      },
+      {
+        "skill_id": "acc_002",
+        "title": "Explicit Variant Selection",
+        "principle": "Always click and visibly confirm the exact color/size/pattern variant on the product page instead of assuming the default matches the request.",
+        "when_to_apply": "Immediately after opening a product that offers multiple variant options."
+      },
+      {
+        "skill_id": "acc_003",
+        "title": "Function Fit Check",
+        "principle": "Read the title and description to verify the accessory\u2019s intended use (e.g., \u2018eye-shadow case\u2019 vs. generic \u2018makeup bag\u2019) aligns with the user\u2019s need before proceeding.",
+        "when_to_apply": "Right after landing on a product page that seems category-relevant but may have ambiguous use."
+      },
+      {
+        "skill_id": "acc_004",
+        "title": "Post-Config Price Audit",
+        "principle": "After selecting all variants, re-confirm the displayed price is within the user\u2019s budget; if it exceeds, backtrack and search for alternatives.",
+        "when_to_apply": "Just before initiating checkout or adding to cart."
+      },
+      {
+        "skill_id": "acc_005",
+        "title": "Fallback to Next Result",
+        "principle": "If any required variant is unavailable or constraints can\u2019t be met on the current page, return to results and open the next candidate instead of forcing a mismatch.",
+        "when_to_apply": "When the product lacks the needed option or violates any key constraint after inspection."
+      }
+    ],
+    "beauty_health": [
+      {
+        "skill_id": "bea_001",
+        "title": "Bundle Constraints Search",
+        "principle": "Combine product type with every user-stated filter (price cap, color, size, material, feature keywords) in one search query to surface highly relevant results.",
+        "when_to_apply": "User lists two or more specific requirements (e.g., price + color, size, feature)."
+      },
+      {
+        "skill_id": "bea_002",
+        "title": "Feature-Led Click",
+        "principle": "Open the first result whose title explicitly mentions the key functional attribute (e.g., \"double sided\", \"long handle\", \"dry hair\") to maximize match likelihood.",
+        "when_to_apply": "After search results appear and at least one headline contains the core feature term."
+      },
+      {
+        "skill_id": "bea_003",
+        "title": "Variant Verification & Set",
+        "principle": "Within the product page, actively choose color, size, or pack options to ensure the selected variant meets all user constraints before purchase.",
+        "when_to_apply": "Product offers selectable options and user has specified any of those attributes."
+      },
+      {
+        "skill_id": "bea_004",
+        "title": "Price Gatekeeping",
+        "principle": "Cross-check the displayed price (including chosen variant) against the user\u2019s maximum; if exceeded, abandon and return to results immediately.",
+        "when_to_apply": "Right after selecting the desired variant and before initiating checkout."
+      },
+      {
+        "skill_id": "bea_005",
+        "title": "Minimal Path Purchase",
+        "principle": "Once a product fully satisfies all constraints, proceed directly to 'Buy Now' without extra browsing to reduce error risk and time.",
+        "when_to_apply": "All user requirements are confirmed on the current product page."
+      }
+    ],
+    "other": [
+      {
+        "skill_id": "oth_001",
+        "title": "Embed All Constraints",
+        "principle": "Build the initial search query to include every required attribute\u2014product type, key features, color/size, and price cap\u2014to surface only high-relevance results.",
+        "when_to_apply": "Right before issuing any product search."
+      },
+      {
+        "skill_id": "oth_002",
+        "title": "Confirm Exact Category",
+        "principle": "Open a result only if its title clearly matches the requested product type, and abandon pages that reveal a different category despite matching other attributes.",
+        "when_to_apply": "Immediately upon landing on a product detail page."
+      },
+      {
+        "skill_id": "oth_003",
+        "title": "Select & Verify Variants",
+        "principle": "After choosing required color, size, or pack options, ensure the page\u2019s title/price update to the selected variant before proceeding to purchase.",
+        "when_to_apply": "When a product offers dropdown or swatch selections."
+      },
+      {
+        "skill_id": "oth_004",
+        "title": "Check Fixed Specs",
+        "principle": "Manually read the description/features to confirm non-selectable requirements (materials, special functions, care instructions) are explicitly met.",
+        "when_to_apply": "Before clicking 'Buy Now' on any configured product."
+      },
+      {
+        "skill_id": "oth_005",
+        "title": "Refine If No Match",
+        "principle": "If initial results don\u2019t meet all constraints, adjust keywords or add filters (e.g., synonyms, price slider) instead of re-clicking unsuitable items.",
+        "when_to_apply": "After reviewing a results page that lacks clear matches."
+      },
+      {
+        "skill_id": "oth_006",
+        "title": "Follow Purchase Flow",
+        "principle": "Maintain the disciplined sequence: Search \u2192 Open candidate \u2192 Apply constraints \u2192 Verify all criteria & price \u2192 Buy Now, avoiding unnecessary back-and-forth.",
+        "when_to_apply": "For every shopping task from start to checkout."
+      }
+    ]
+  },
+  "common_mistakes": [
+    {
+      "mistake_id": "err_001",
+      "description": "Submitting a search query that omits key constraints (e.g., size or price cap), leading to an overwhelming or irrelevant result set.",
+      "why_it_happens": "The agent focuses on main keywords (product + attributes) and forgets secondary filters like price, size, or color.",
+      "how_to_avoid": "Always assemble the full requirement list first, then build the query so every mandatory constraint (category, attributes, price) is explicitly included."
+    },
+    {
+      "mistake_id": "err_002",
+      "description": "Using overly specific or uncommon color/variant names in the initial search, returning zero or few results.",
+      "why_it_happens": "Agents translate the user-given color directly into the query without considering site vocabulary or synonyms.",
+      "how_to_avoid": "Start with broader color families (e.g., \"red\" instead of \"dusty blush\") and narrow down with on-page filters once results appear."
+    },
+    {
+      "mistake_id": "err_003",
+      "description": "Selecting a visually similar but wrong product category (e.g., picking dress pants instead of dress shirts).",
+      "why_it_happens": "Thumbnail images can be misleading and the agent may rely solely on visual similarity without verifying category metadata.",
+      "how_to_avoid": "Cross-check product titles and breadcrumb/category labels against the requested category before clicking or purchasing."
+    },
+    {
+      "mistake_id": "err_004",
+      "description": "Failing to notice that the displayed price changes after selecting the required size or color, causing budget overruns.",
+      "why_it_happens": "Agents often check price only on the default variant and assume it persists across all options.",
+      "how_to_avoid": "After every option change (size, color, etc.) re-read the price element and abort if it exceeds the budget."
+    },
+    {
+      "mistake_id": "err_005",
+      "description": "Adding an item to cart without first setting mandatory variant options, triggering errors or adding an unintended default variant.",
+      "why_it_happens": "The agent clicks \u201cBuy Now\u201d immediately because the button is visible and enabled, overlooking required selections.",
+      "how_to_avoid": "Before purchasing, validate that every required dropdown/radio option (size, color, length, pack count) has been explicitly selected."
+    },
+    {
+      "mistake_id": "err_006",
+      "description": "Assuming all desired attributes (e.g., material, wash type) are present without reading the product description.",
+      "why_it_happens": "Agents may treat search filters as guarantees and skip verifying details on the product page.",
+      "how_to_avoid": "Parse the bullet list or specifications section to confirm every non-variant attribute (material, care, outsole type) is actually listed."
+    },
+    {
+      "mistake_id": "err_007",
+      "description": "Ignoring shipping costs or add-on pricing that push the total above the user\u2019s budget.",
+      "why_it_happens": "The agent monitors only the item price field and forgets additional fees displayed later in checkout.",
+      "how_to_avoid": "Include a price-check step after adding to cart or at checkout that sums item cost, shipping, and taxes, then compare with budget."
+    },
+    {
+      "mistake_id": "err_008",
+      "description": "Misinterpreting size labels (e.g., confusing '5X' with '5X-Large Tall' or regional shoe size systems).",
+      "why_it_happens": "Websites present multiple size systems, and agents may pick the first matching number/string without context.",
+      "how_to_avoid": "Match the full size token (including modifiers like 'Tall', 'Wide', or units) and prefer exact string matches over partial matches."
+    },
+    {
+      "mistake_id": "err_009",
+      "description": "Skipping availability checks and attempting to purchase out-of-stock variants, leading to failure screens.",
+      "why_it_happens": "Agents often assume a listed option is purchasable without reading stock indicators or disabled buttons.",
+      "how_to_avoid": "After selecting each variant, verify that the 'Add to Cart/Buy Now' button remains enabled and that no 'Out of Stock' message appears."
+    },
+    {
+      "mistake_id": "err_010",
+      "description": "Navigating back to the results page after configuring a product, causing loss of selected options and wasted steps.",
+      "why_it_happens": "The agent re-evaluates alternatives but forgets that UI state resets on navigation.",
+      "how_to_avoid": "Cache the current page state or finish purchase before leaving; if further comparison is needed, open new tabs/windows instead of back navigation."
+    },
+    {
+      "mistake_id": "err_011",
+      "description": "Clicking sponsored or irrelevant ads that match keywords loosely, diverting the workflow away from suitable products.",
+      "why_it_happens": "Some search result layouts give ads prominence, and agents may not distinguish them from organic results.",
+      "how_to_avoid": "Detect ad/disclaimer labels (e.g., 'Sponsored') and prioritize organic listings that more reliably satisfy user constraints."
+    },
+    {
+      "mistake_id": "err_012",
+      "description": "Applying mutually exclusive or contradictory filters (e.g., selecting both a specific size and a 'one-size' filter), yielding empty results.",
+      "why_it_happens": "The agent applies every stated constraint mechanically without understanding that some filters override or negate others.",
+      "how_to_avoid": "Reason about filter compatibility: if a required variant is chosen on the product page, avoid redundant or conflicting global filters."
+    }
+  ],
+  "metadata": {
+    "source": "generated from WebShop trajectories",
+    "total_memories_analyzed": 200,
+    "product_distribution": {
+      "apparel": {
+        "success": 65,
+        "failure": 55
+      },
+      "footwear": {
+        "success": 17,
+        "failure": 7
+      },
+      "home_decor": {
+        "success": 5,
+        "failure": 7
+      },
+      "electronics": {
+        "success": 4,
+        "failure": 2
+      },
+      "accessories": {
+        "success": 4,
+        "failure": 1
+      },
+      "beauty_health": {
+        "success": 3,
+        "failure": 0
+      },
+      "other": {
+        "success": 22,
+        "failure": 8
+      }
+    }
+  }
+}

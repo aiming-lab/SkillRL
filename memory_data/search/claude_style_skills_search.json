@@ -1,0 +1,284 @@
+{
+  "general_skills": [
+    {
+      "skill_id": "gen_001",
+      "title": "Decompose Then Search",
+      "principle": "Break the question into minimal sub-questions (entities, attributes, relations) and handle each with its own query before synthesizing the final answer.",
+      "when_to_apply": "Any complex or multi-part question, especially multi-hop or comparative tasks."
+    },
+    {
+      "skill_id": "gen_002",
+      "title": "Precision Query Crafting",
+      "principle": "Compose searches with the exact entity name plus the sought attribute (e.g., \"<entity> release date\"), avoiding filler words to maximize relevant hits.",
+      "when_to_apply": "Initial query formulation for any fact lookup."
+    },
+    {
+      "skill_id": "gen_003",
+      "title": "Iterative Query Refinement",
+      "principle": "If top results don\u2019t yield direct evidence, rephrase by adding qualifiers (dates, roles, context) or alternate names instead of repeating the same query.",
+      "when_to_apply": "After scanning first result set and finding no definitive evidence."
+    },
+    {
+      "skill_id": "gen_004",
+      "title": "Source-Backed Assertions",
+      "principle": "Only state an answer once the supporting evidence (reliable source snippet) has been located and read; refrain from guessing or summarizing from memory.",
+      "when_to_apply": "Before committing to a final answer, especially for contentious or less-known facts."
+    },
+    {
+      "skill_id": "gen_005",
+      "title": "Cross-Check Multiple Sources",
+      "principle": "Validate critical facts (dates, numbers, names) against at least two independent sources to avoid outdated or incorrect information.",
+      "when_to_apply": "When the fact may have changed over time or when initial sources disagree."
+    },
+    {
+      "skill_id": "gen_006",
+      "title": "Explicit Ambiguity Resolution",
+      "principle": "Detect ambiguous entity mentions and disambiguate by adding clarifiers (e.g., occupation, year, nationality) in the query or by exploring disambiguation pages.",
+      "when_to_apply": "When an entity name maps to multiple possible referents or results appear mixed."
+    },
+    {
+      "skill_id": "gen_007",
+      "title": "Attribute-Chaining Search",
+      "principle": "For multi-hop tasks, first retrieve the intermediate entity (e.g., a film\u2019s director) then run a second targeted query for that entity\u2019s attribute (e.g., birthplace) before synthesizing.",
+      "when_to_apply": "Whenever the answer depends on an attribute of a related entity rather than the entity in the question."
+    },
+    {
+      "skill_id": "gen_008",
+      "title": "Structured Comparison",
+      "principle": "When comparing entities (earlier/later, larger/smaller), collect each relevant value separately, list them side by side, then decide using explicit comparison logic.",
+      "when_to_apply": "Any comparative question involving dates, counts, or quantitative attributes."
+    },
+    {
+      "skill_id": "gen_009",
+      "title": "Freshness Awareness",
+      "principle": "For time-sensitive queries (e.g., upcoming releases, current versions), include temporal cues like \"latest\", year, or \"release date 2023\" and prioritize most recent authoritative sources.",
+      "when_to_apply": "Questions asking for \u201ccurrent\u201d, \u201cnext\u201d, or \u201clatest\u201d information."
+    },
+    {
+      "skill_id": "gen_010",
+      "title": "Exit When Evidence Is Solid",
+      "principle": "Stop issuing further queries once you have clear, corroborated evidence; conversely, avoid premature termination if no source explicitly supports an answer.",
+      "when_to_apply": "After each read step\u2014decide to answer only if confidence is justified; otherwise refine search."
+    }
+  ],
+  "query_type_skills": {
+    "direct_retrieval": [
+      {
+        "skill_id": "dir_001",
+        "title": "Isolate Core Query",
+        "principle": "Strip the question to its key entity + sought fact (who/what/when/where) and search exactly that pair first.",
+        "when_to_apply": "At the start of any direct-retrieval task."
+      },
+      {
+        "skill_id": "dir_002",
+        "title": "Refine When Empty",
+        "principle": "If first search yields weak/no hits, instantly reformulate using synonyms, alternate names, dates, or quoted phrases instead of repeating the same query.",
+        "when_to_apply": "After an initial search returns no clear answer or only tangential results."
+      },
+      {
+        "skill_id": "dir_003",
+        "title": "Anchor With Quotes",
+        "principle": "For song titles, quotes, episode names, etc., wrap the unique phrase in quotation marks to pull exact-match sources.",
+        "when_to_apply": "When the query contains distinctive phrases, lyrics, book/film titles, or direct quotations."
+      },
+      {
+        "skill_id": "dir_004",
+        "title": "Check Temporal Context",
+        "principle": "Include recency cues (e.g., \"current\", year) in the search and verify publication date to avoid outdated or speculative info.",
+        "when_to_apply": "For questions about 'current', 'latest', or future events/releases."
+      },
+      {
+        "skill_id": "dir_005",
+        "title": "Evidence-Bound Answer",
+        "principle": "Only state an answer that is explicitly supported by the retrieved text; if unclear, continue searching rather than guess or hallucinate.",
+        "when_to_apply": "Before finalizing any factoid answer."
+      }
+    ],
+    "multi_hop_reasoning": [
+      {
+        "skill_id": "mul_001",
+        "title": "Decompose Question First",
+        "principle": "Split the main query into explicit sub-questions to identify each entity and the specific attribute or relationship needed before searching.",
+        "when_to_apply": "Any multi-hop question that links two or more entities/facts (e.g., director\u2019s birthplace, album vs film comparisons)."
+      },
+      {
+        "skill_id": "mul_002",
+        "title": "Targeted Sequential Searches",
+        "principle": "Issue separate, focused searches for each sub-question or entity instead of one broad query to gather precise intermediate facts.",
+        "when_to_apply": "After decomposition, when distinct pieces of information must be collected individually."
+      },
+      {
+        "skill_id": "mul_003",
+        "title": "Collect-Then-Compare",
+        "principle": "Retrieve concrete values for all items involved (dates, places, relations) before performing any comparison or conclusion to avoid premature or unsupported answers.",
+        "when_to_apply": "Comparative tasks (earlier/later, older/younger, bigger/smaller, etc.)."
+      },
+      {
+        "skill_id": "mul_004",
+        "title": "Contextual Disambiguation",
+        "principle": "Add clarifying descriptors (profession, year, medium, location) to queries to distinguish between entities with identical or similar names and prevent mixing facts.",
+        "when_to_apply": "Whenever an entity name is generic or shared by multiple subjects (e.g., common personal names, titles appearing in different media)."
+      },
+      {
+        "skill_id": "mul_005",
+        "title": "Iterative Query Refinement",
+        "principle": "If initial search fails or returns ambiguous results, promptly rephrase using synonyms, alternate titles, or additional context instead of repeating the same query.",
+        "when_to_apply": "After a search yields no relevant results or conflicting information."
+      }
+    ],
+    "entity_attribute_lookup": [
+      {
+        "skill_id": "ent_001",
+        "title": "Direct Attribute Query",
+        "principle": "Include both the full entity name and target attribute (e.g., \"[Name] occupation\") in the first search to surface authoritative bios immediately.",
+        "when_to_apply": "Whenever the entity\u2019s full, unambiguous name is provided in the question."
+      },
+      {
+        "skill_id": "ent_002",
+        "title": "Disambiguation Add-Ons",
+        "principle": "If the name is common or ambiguous, append clarifiers (birth year, nationality, known work) to the query or scan result snippets for matching context before selecting a source.",
+        "when_to_apply": "When multiple people/characters share the same name or early results mix different entities."
+      },
+      {
+        "skill_id": "ent_003",
+        "title": "Two-Source Cross-Check",
+        "principle": "Confirm the attribute in at least two independent, reputable sources (e.g., Wikipedia infobox + biography site) to avoid hallucinations.",
+        "when_to_apply": "After the first plausible answer appears or when the attribute seems uncommon or uncertain."
+      },
+      {
+        "skill_id": "ent_004",
+        "title": "Iterative Query Refinement",
+        "principle": "If initial search returns irrelevant hits, adjust the query instead of repeating it\u2014use alternative spellings, middle initials, or related works/titles.",
+        "when_to_apply": "When consecutive top results don\u2019t mention the sought attribute for the intended entity."
+      },
+      {
+        "skill_id": "ent_005",
+        "title": "Attribute-Only Response",
+        "principle": "State solely the requested attribute (e.g., \"architect\") in the final answer, omitting extra explanations to meet answer-format expectations.",
+        "when_to_apply": "After verifying the attribute and preparing the final output for an entity_attribute_lookup task."
+      }
+    ],
+    "comparison": [
+      {
+        "skill_id": "com_001",
+        "title": "Decompose & Isolate",
+        "principle": "First split the question into (a) each entity and (b) the single attribute to be compared; this ensures every subsequent search is targeted and comparable.",
+        "when_to_apply": "At the moment you read any comparison-type question."
+      },
+      {
+        "skill_id": "com_002",
+        "title": "Parallel Attribute Lookup",
+        "principle": "Independently retrieve the identical attribute for each entity\u2014run separate, attribute-focused searches (e.g., \"[Entity] headquarters\", \"[Entity] release date\") and store the raw values.",
+        "when_to_apply": "Immediately after identifying entities and the comparison attribute."
+      },
+      {
+        "skill_id": "com_003",
+        "title": "Normalize Before Comparing",
+        "principle": "Convert retrieved values to a common, directly comparable form (e.g., standardize dates, compute ages, map demonyms to countries) before judging equality or ordering.",
+        "when_to_apply": "After gathering each entity\u2019s attribute but before drawing any conclusion."
+      },
+      {
+        "skill_id": "com_004",
+        "title": "Confirm or Escalate Ambiguity",
+        "principle": "If a search yields no clear or multiple results, refine the query with context (profession, year, language) or acknowledge data insufficiency\u2014never infer without evidence.",
+        "when_to_apply": "Whenever an attribute lookup returns ambiguous, missing, or conflicting information."
+      },
+      {
+        "skill_id": "com_005",
+        "title": "Explicit Comparative Reasoning",
+        "principle": "State each normalized value and perform the logical comparison (equal, earlier, larger, etc.) explicitly to derive the answer, ensuring traceability and avoiding hallucination.",
+        "when_to_apply": "As the final synthesis step before outputting the comparison result."
+      }
+    ]
+  },
+  "common_mistakes": [
+    {
+      "mistake_id": "err_001",
+      "description": "Submitting the exact same query repeatedly despite poor results.",
+      "why_it_happens": "The agent lacks a fallback strategy and treats search as a black-box, hoping for a different outcome from identical input.",
+      "how_to_avoid": "After one or two unhelpful results, reformulate the query\u2014add distinctive keywords, synonyms, date filters, or entity qualifiers\u2014before querying again."
+    },
+    {
+      "mistake_id": "err_002",
+      "description": "Issuing queries that are too broad or vague, leading to floods of irrelevant documents.",
+      "why_it_happens": "The agent does not translate the task\u2019s specific constraints (film title, year, occupation, etc.) into precise search terms.",
+      "how_to_avoid": "Identify unique, discriminative keywords (full names, titles, date ranges) and include them plus context terms (e.g., \"occupation\", \"born\", \"director\") in the initial query."
+    },
+    {
+      "mistake_id": "err_003",
+      "description": "Hallucinating answers without citing or locating supporting evidence.",
+      "why_it_happens": "Pressure to produce an answer quickly overrides the requirement to ground claims in retrieved content.",
+      "how_to_avoid": "Adopt a strict rule: never output a fact unless a retrieved document snippet explicitly states it; quote or reference the source before answering."
+    },
+    {
+      "mistake_id": "err_004",
+      "description": "Failing to resolve ambiguous entity names, resulting in mixing up multiple people/films/places.",
+      "why_it_happens": "The agent assumes the first matching result is correct without checking for multiple candidates with the same name.",
+      "how_to_avoid": "Collect basic disambiguation attributes (dates, domains, middle names, context terms) from the question and ensure retrieved documents match these before accepting them."
+    },
+    {
+      "mistake_id": "err_005",
+      "description": "Skipping necessary decomposition in multi-hop questions and trying to answer in one jump.",
+      "why_it_happens": "The agent does not break the task into sequential sub-questions, so it cannot chain evidence correctly.",
+      "how_to_avoid": "Explicitly outline the required hops (e.g., identify director \u2192 get director\u2019s birthplace) and answer each sub-question with evidence before synthesizing the final answer."
+    },
+    {
+      "mistake_id": "err_006",
+      "description": "Providing comparative or superlative judgments without retrieving both (all) required data points.",
+      "why_it_happens": "The agent finds one data point, guesses the comparison, and responds without confirming the other side(s).",
+      "how_to_avoid": "For any comparison, fetch and list the relevant metrics (dates, ages, counts) for each entity, then compute/compare them explicitly in the reasoning step."
+    },
+    {
+      "mistake_id": "err_007",
+      "description": "Misreading or misquoting retrieved documents, leading to incorrect conclusions.",
+      "why_it_happens": "Superficial scanning or pattern-matching errors cause the agent to lift unrelated facts that look similar.",
+      "how_to_avoid": "Cross-check key details (names, dates, pronouns) within the snippet\u2019s full sentence, and, when in doubt, open additional sources to confirm consistency."
+    },
+    {
+      "mistake_id": "err_008",
+      "description": "Relying on outdated or time-sensitive information for questions about current/future events.",
+      "why_it_happens": "The agent retrieves older pages without considering publication dates or official announcements.",
+      "how_to_avoid": "Filter or sort results by recency, include year keywords (e.g., \"2024 release date\"), and verify with authoritative, up-to-date sources such as official sites or reputable news outlets."
+    },
+    {
+      "mistake_id": "err_009",
+      "description": "Stopping the search after the first seemingly relevant snippet and not verifying completeness or accuracy.",
+      "why_it_happens": "Early-exit bias causes the agent to prefer minimal effort over thorough validation.",
+      "how_to_avoid": "Adopt a policy of retrieving and examining at least two independent sources (or until conflicting data appears) before finalizing the answer."
+    },
+    {
+      "mistake_id": "err_010",
+      "description": "Neglecting to use question context (e.g., dataset type, hint words like \"occupation\" or \"nationality\") when forming queries.",
+      "why_it_happens": "Template-based querying ignores domain-specific cues embedded in the prompt.",
+      "how_to_avoid": "Parse the question for relationship words (occupation, birthplace, nationality) and explicit entities, then craft queries that pair the entity with the exact attribute term."
+    },
+    {
+      "mistake_id": "err_011",
+      "description": "Answering without handling plural or list requests fully, leading to partial or incomplete answers (e.g., partial cast lists).",
+      "why_it_happens": "The agent stops after finding one or two examples instead of confirming the full scope required.",
+      "how_to_avoid": "Detect when the question expects a list; iterate through multiple reliable sources to compile a comprehensive answer, and indicate if the list is partial when coverage is uncertain."
+    }
+  ],
+  "metadata": {
+    "source": "generated from Search agent trajectories using o3",
+    "total_memories_analyzed": 196,
+    "query_type_distribution": {
+      "direct_retrieval": {
+        "success": 53,
+        "failure": 26
+      },
+      "multi_hop_reasoning": {
+        "success": 58,
+        "failure": 29
+      },
+      "entity_attribute_lookup": {
+        "success": 11,
+        "failure": 5
+      },
+      "comparison": {
+        "success": 10,
+        "failure": 4
+      }
+    }
+  }
+}

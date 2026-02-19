@@ -1,0 +1,264 @@
+PROMPTS_search = {
+"contextual_description": """
+You are an expert **RAG Abstraction Engine** for an autonomous agent memory system.
+Your objective is to generate a **single-paragraph** "contextual_description" that describes the task and the resolution process.
+
+**Requirements:**
+* Write ONE plain-text paragraph (no bullet points, no lists, no markdown).
+* Include the task type and what the agent did to solve it.
+* Explicitly state whether it succeeded or failed, and briefly why.
+* Keep it concise (1-3 sentences).
+
+**Input Data Analysis:**
+* Analyze the `Raw Trajectory` to understand how the agent gathered information.
+* Identify if it's a "Multi-hop reasoning" or "Direct retrieval" task.
+
+**Output Format:**
+Return ONLY the paragraph string.
+""",
+
+"refined_trajectory": """
+You are an expert **Trajectory Refinement & Abstraction Engine** using a **"Backward Causal Chaining"** algorithm.
+Your goal is to extract the minimal `refined_trajectory` from a raw search log AND **generalize** the content.
+
+**Phase 1: The Refinement Algorithm (For Search Tasks)**
+1.  **Identify the Answer:** Find the step where the final `<answer>` was generated.
+2.  **Trace Dependencies:** Look backward. Which specific `<search>` queries provided the information used in the final answer?
+3.  **Filter Noise:** Remove search queries that returned "No result" or returned information NOT used in the final reasoning.
+
+**Phase 2: The Abstraction Layer (Generalization Rules)**
+1.  **Query Abstraction:**
+    * **NEVER** keep specific entity names if they can be generalized to a category.
+    * *Example:* "Michael Strahan career" -> "Search for [Person] career history".
+    * *Example:* "iphone 13 price" -> "Search for [Product] price".
+    * **Keep Templates:** The output should look like a reusable plan template.
+
+2.  **Observation Abstraction (Crucial):**
+    * Since specific observation text might be long, summarize the *type* of information found.
+    * *Example:* "Found career dates and team list" instead of copying the full text.
+
+**Output Structure:**
+Output a JSON list `refined_trajectory`.
+* `step_index`: The original step index.
+* `action`: The **GENERALIZED** search query or reasoning step.
+* `critical_observation`: Abstracted summary of what was found.
+* `reasoning`: Why this step was necessary.
+Output ONLY the JSON object.
+""",
+
+"strategic_guidelines": """
+You are an expert **Strategic Analyst** for a Search/QA Agent.
+Your goal is to extract high-level `strategic_guidelines` from a trajectory.
+
+**Input Analysis:** Check the `Outcome` of the trajectory.
+
+### **CASE 1: If Outcome is SUCCESS**
+Focus on **Search Patterns**.
+1.  **`planning_pattern`:**
+    * Abstract the logic flow into a chain.
+    * *Example:* `Decompose Question -> Search Entity A -> Search Entity B -> Synthesize`.
+    * Use generic terms: `[Entity]`, `[Attribute]`, `[Time_Period]`.
+2.  **`mistakes_to_avoid`:** Leave empty `[]`.
+
+### **CASE 2: If Outcome is FAILURE**
+Focus on **Query/Reasoning Errors**.
+1.  **`planning_pattern`:** Set to `null`.
+2.  **`mistakes_to_avoid`:**
+    * Identify the **Root Cause**.
+    * `trigger_condition`: What kind of question or state caused the error? (e.g., "Ambiguous entity name", "Search loop").
+    * `bad_action`: What did the agent do wrong? (e.g., "Repeated same query", "Hallucinated answer without evidence").
+
+**Output Structure (JSON):**
+```json
+{
+  "strategic_guidelines": {
+    "planning_pattern": "String or null",
+    "mistakes_to_avoid": [
+      {
+        "trigger_condition": "String",
+        "bad_action": "String"
+      }
+    ]
+  }
+}
+""" }
+
+#Webshop and ALFWorld prompt
+
+PROMPTS = {
+"contextual_description": """
+You are an expert **RAG Abstraction Engine** for an autonomous agent memory system.
+Your objective is to generate a **"contextual_description"** that classifies the task type and summarizes the execution logic.
+
+**Target Output Format:**
+
+* **IF WebShop:**
+    "WebShop task to [Action] a [Item Category] with [Constraint Types]. [Outcome Description]."
+
+* **IF AlfWorld:**
+    "AlfWorld task classified as '[Task Category]' to [Goal String]. [Outcome Description]."
+
+**Rules for Generation:**
+
+1.  **WebShop Specific Rules (High Abstraction):**
+    * **Item Category:** Map specific items to broad domains (e.g., "Electronics", "Apparel").
+    * **Constraint Types:** Describe categories only (e.g., "Price and Attribute constraints"). NO specific values.
+
+2.  **AlfWorld Specific Rules:**
+    * **Task Category (Strict):** Map to exactly one of: `pick_and_place`, `pick_two_obj_and_place`, `look_at_obj_in_light`, `pick_heat_then_place_in_recep`, `pick_cool_then_place_in_recep`, `pick_clean_then_place_in_recep`.
+    * **Goal String:** **Copy the exact 'Goal' string from the input**, but remove all instance numbers/IDs. 
+
+3.  **Universal Outcome Description (Sequential Action Flow):**
+    * **IF Success:** Output "Solved by [Sequential Action Summary]".
+        * *WebShop:* e.g., "Solved by searching full terms, selecting options, and buying."
+        * *AlfWorld:* e.g., "Solved by sourcing from the shelf, heating at the microwave, and placing on the table."
+    * **IF Failure:** Output "Unsolved due to [Root Cause]".
+
+**Output Format:**
+Return ONLY the description string.
+""",
+
+    # "keywords": ... 
+
+# 3. Generated Refined Trajectory (Success only)
+    "refined_trajectory": """
+You are an expert **Trajectory Refinement & Abstraction Engine** using a **"Backward Causal Chaining"** algorithm.
+Your goal is to extract the minimal `refined_trajectory` from a raw log AND **generalize** the content into semantic placeholders.
+
+**Phase 1: The Refinement Algorithm (Strictly Backward Logic)**
+1.  **Start Point:** Identify the **Last Successful Step** (The step that achieved the goal). Call this `Current_Step`.
+2.  **Recursive Step (The Loop):**
+    * **Analyze Dependency:** Determine the strict **Required Precondition** for `Current_Step`. Ask: "What specific state, information, or object availability was necessary for this action to occur?"
+    * **Scan Backwards:** Traverse the log in reverse order from `Current_Step`.
+    * **Find Nearest Enabler:** Identify the **nearest** preceding step (`Preceding_Step`) that explicitly generated this Precondition.
+    * **Prune Noise:** Mark all steps logically located *between* `Preceding_Step` and `Current_Step` as NOISE (irrelevant actions) and exclude them.
+    * **Update:** Set `Current_Step` = `Preceding_Step`.
+    * **Repeat:** Continue this process recursively until the start of the episode is reached.
+
+**Phase 2: The Abstraction Layer (Strict Generalization Rules)**
+
+Once the causal chain is identified, rewrite all content using the following context-dependent rules:
+
+1.  **Entity Abstraction (Environment Specific):**
+    * **IF WebShop:** Replace specific product titles or IDs with the **Broad Item Category** (e.g., "Samsung Galaxy S21" -> "Smartphone", "Levi's Jeans" -> "Apparel").
+    * **IF AlfWorld:** Keep the **Specific Object Name** but **REMOVE Instance IDs** (e.g., "mug 1" -> "mug", "cabinet 2" -> "cabinet", "apple 3" -> "apple").
+
+2.  **Attribute Abstraction (Constraint Categories):**
+    * **NEVER** output specific numbers or values (e.g., "$50.00", "5x-large", "Blue").
+    * **ALWAYS** replace them with the **Constraint Type** placeholder.
+        * *Examples:* "$50.00" -> `[Price_Constraint]`, "Red" -> `[Color_Constraint]`, "Small" -> `[Size_Constraint]`.
+
+3.  **Action/Observation Generalization:**
+    * The `action` string must apply the rules above (e.g., WebShop: `click[[Size_Constraint]]`; AlfWorld: `take apple from cabinet`).
+    * The `critical_observation` must describe the state change using these abstracted terms.
+
+**Output Structure:**
+Output a JSON list `refined_trajectory` (chronological order).
+* `step_index`: The original step index.
+* `action`: The **GENERALIZED** action string.
+* `critical_observation`: The **GENERALIZED** observation description focusing on state changes.
+* `reasoning`: **A single, highly generalizable sentence** explaining the strategic intent.
+    * **Constraint:** For exploration steps (where object location is unknown), **DO NOT use simple "Navigate" terms**. Instead, emphasize **search for unknown**.
+Output ONLY the JSON object.
+""",
+
+    "semantic_knowledge": """
+You are an expert **Semantic Rule Extractor**.
+Your task is to analyze a successful agent trajectory and extract the **Attribute Matching Rules**.
+
+**Core Logic:** Bridge Task Goal with Raw Trajectory verification actions.
+
+**Constraint 1: Abstract Attribute Names:** `target_attribute` MUST be General Category only.
+**Constraint 2: Evidence-Based:** Only include actually verified attributes.
+**Constraint 3: Standardized Mappings:** Use phrases like "Product Page 'color' Options" or "Item Title".
+
+**Output Schema (JSON):**
+Generate a JSON list `attribute_matching_rules` containing `target_attribute`, `observation_mapping`, `verification_logic`.
+""",
+
+    "strategic_guidelines_alfworld": """
+You are an expert **Strategic Analyst**.
+Your goal is to extract high-level `strategic_guidelines` focusing on the execution skeleton and error avoidance.
+
+**Input Analysis:** Check the `Outcome` of the trajectory first.
+
+### **CASE 1: If Outcome is SUCCESS**
+1.  **`planning_pattern` (Strict Abstract Format):**
+    * Abstract the successful trajectory into a high-level **Logical Chain**.
+    * **Syntax:** Use " -> " to separate major steps.
+    * **CRITICAL ABSTRACTION RULES:**
+        * **NEVER use specific names.** (e.g., NO "apple", NO "shelf", NO "fridge").
+        * **Replace Objects** with: `[Object_1]`, `[Object_2]` (Must be critical targets/tools).
+        * **Replace Search Areas** with: `[Location]` (or `[Location_A]` if multiple).
+        * **Replace Fixed Destinations** with: `[Target_Location]` (for placement/heating/cleaning).
+
+    * **Action Rules:**
+        * **Mandatory Search Precondition:** Before interacting with ANY object (whether taking it or using it), you MUST explicitly state the search phase.
+            * Format: **"Search [Location] where possibly having [Object_X]"** -> **"[Action_Verb] [Object_X]"**.
+            * **Vocabulary Control:** Prioritize standard verbs like **"Acquire"**, **"Use"**, **"Heat"**, **"Cool"**, **"Clean"**, or **"Place"**. However, if these do not fit the specific action, use another precise English verb (e.g., "Slice", "Toggle").
+        * **Multi-Object Logic:** * If objects are in **DIFFERENT** locations: Distinguish search phases.
+            * If objects are in the **SAME** location: **Combine the search** (e.g., **"Search [Location] where possibly having [Object_1, Object_2]"** -> "[Action_Verb] [Object_1]" -> "[Action_Verb] [Object_2]").
+        * **Navigation (Known Destination):** Use **"Navigate to [Target_Location]"** ONLY when moving to a fixed appliance or placement target *after* obtaining the object.
+
+2.  **`mistakes_to_avoid`:** Return an empty list `[]`.
+
+### **CASE 2: If Outcome is FAILURE**
+1.  **`planning_pattern`:** Return `null`.
+2.  **`mistakes_to_avoid`:**
+    * Identify the **Root Cause** of the failure.
+    * **Generalization Rule (Crucial):** Write highly universal rules. **NEVER** use specific object/location names (e.g., NO "mug", NO "cabinet 1"). Use abstract terms like `[Target_Object]`, `[Similar_Object]`, `[Container]`, `[Location]`.
+    
+    * Return a list of objects containing ONLY:
+        * `trigger_condition`: The **abstract** context where the error occurred.
+        * `bad_action`: The **abstract** incorrect action taken.
+
+**Output Structure (JSON):**
+Output ONLY the JSON object with keys `planning_pattern` and `mistakes_to_avoid`.
+""",
+    "strategic_guidelines": """
+You are an expert **Strategic Analyst** for an autonomous agent.
+Your goal is to extract high-level `strategic_guidelines` from a trajectory.
+
+**Input Analysis:**
+Check the `Outcome` of the trajectory first.
+
+---
+
+### **CASE 1: If Outcome is SUCCESS**
+Focus on **Replicability**. How can we repeat this success?
+
+1.  **`planning_pattern` (The Skeleton):**
+    * Abstract the successful `refined_trajectory` into a high-level chain of logic.
+    * Format: `ActionType -> ActionType -> ActionType`.
+
+2.  **`mistakes_to_avoid`:** Leave empty `[]`.
+
+---
+
+### **CASE 2: If Outcome is FAILURE**
+Focus on **Error Avoidance**. What was the "Wrong Direction"?
+
+1.  **`planning_pattern`:** Set to `null` (since the plan failed).
+2.  **`mistakes_to_avoid` (The Core Task):**
+    * Identify the **Root Cause** of the failure.
+    * Formulate a **"Negative Constraint"** object:
+        * `trigger_condition`: The context where the agent went wrong.
+        * `bad_action`: The specific action that led to failure.
+
+---
+
+**Output Structure (JSON):**
+```json
+{
+  "strategic_guidelines": {
+    "planning_pattern": "String or null",
+    "mistakes_to_avoid": [
+      {
+        "trigger_condition": "String",
+        "bad_action": "String"
+      }
+    ]
+  }
+}
+"""
+}
