@@ -223,10 +223,7 @@ If you find our work helpful, please consider citing:
   year={2026}
 }
 ```
-<<<<<<< HEAD
-=======
 
 ## 🙏 Acknowledgement
 We would like to express our gratitude to the open-source community and the following projects for making this work possible: 
 [verl-agent](https://github.com/langfengQ/verl-agent), [LLaMA-Factory](https://github.com/hiyouga/LlamaFactory), [Qwen](https://github.com/QwenLM/Qwen), etc.
->>>>>>> 8fadb49 (first commit)
