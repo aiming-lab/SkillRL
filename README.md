@@ -12,7 +12,7 @@ Bridging the gap between raw experience and policy improvement through automatic
 
 ## 🔥 News
 
-- **[02/23/2026]** We released all the model checkpoints on HuggingFace!
+- **[02/23/2026]** We released all the model checkpoints on HuggingFace! Feel free to use them as warm starts for continued RL training.
 - **[02/18/2026]** The code of SkillRL was released!
 - **[02/10/2026]** SkillRL paper was released on [arXiv](https://arxiv.org/abs/2602.08234)!
 
@@ -35,7 +35,6 @@ SkillRL is a framework that enables LLM agents to learn high-level, reusable beh
 ## 📥 Model Download
 
 You can directly download the model weights by following the links below.
-
 
 <table>
   <thead>
