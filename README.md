@@ -12,6 +12,7 @@ Bridging the gap between raw experience and policy improvement through automatic
 
 ## 🔥 News
 
+- **[02/23/2026]** We released all the model checkpoints on HuggingFace!
 - **[02/18/2026]** The code of SkillRL was released!
 - **[02/10/2026]** SkillRL paper was released on [arXiv](https://arxiv.org/abs/2602.08234)!
 
@@ -28,6 +29,53 @@ SkillRL is a framework that enables LLM agents to learn high-level, reusable beh
 - **Recursive Skill Evolution**: A dynamic mechanism where the skill library co-evolves with the agent's policy during RL by analyzing validation failures.
 
 - **Context Efficiency**: Achieves 10-20% token compression compared to raw trajectory storage while enhancing reasoning utility. 
+
+---
+
+## 📥 Model Download
+
+You can directly download the model weights by following the links below.
+
+
+<table>
+  <thead>
+    <tr>
+      <th align="center">Task</th>
+      <th align="center">Model</th>
+      <th align="center">Download Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center" rowspan="2">🧭 ALFWorld</td>
+      <td align="center">SFT Model</td>
+      <td align="center"><a href="https://huggingface.co/Jianwen/Alfworld-7B-SFT">🤗 HuggingFace</a></td>
+    </tr>
+    <tr>
+      <td align="center">RL Model</td>
+      <td align="center"><a href="https://huggingface.co/Jianwen/Alfworld-7B-RL">🤗 HuggingFace</a></td>
+    </tr>
+    <tr>
+      <td align="center" rowspan="2">🛍️ WebShop</td>
+      <td align="center">SFT Model</td>
+      <td align="center"><a href="https://huggingface.co/Jianwen/Webshop-7B-SFT">🤗 HuggingFace</a></td>
+    </tr>
+    <tr>
+      <td align="center">RL Model</td>
+      <td align="center"><a href="https://huggingface.co/Jianwen/Webshop-7B-RL">🤗 HuggingFace</a></td>
+    </tr>
+    <tr>
+      <td align="center" rowspan="2">🔍 Search</td>
+      <td align="center">SFT Model</td>
+      <td align="center"><a href="https://huggingface.co/Jianwen/Search-7B-SFT">🤗 HuggingFace</a></td>
+    </tr>
+    <tr>
+      <td align="center">RL Model</td>
+      <td align="center"><a href="https://huggingface.co/Jianwen/Search-7B-RL">🤗 HuggingFace</a></td>
+    </tr>
+  </tbody>
+</table>
+
 
 ---
 
