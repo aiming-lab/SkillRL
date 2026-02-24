@@ -293,7 +293,7 @@ class GameStateBase(object):
         return discrete_action
 
     def get_bbox_of_obj(self, object_id):
-        instance_detections2D = self.env.last_event.instance_detections2D if self.env.last_event.instance_detections2D != None else []
+        instance_detections2D = self.env.last_event.instance_detections2D if self.env.last_event.instance_detections2D is not None else []
 
         if object_id in instance_detections2D:
             np_box = instance_detections2D[object_id]

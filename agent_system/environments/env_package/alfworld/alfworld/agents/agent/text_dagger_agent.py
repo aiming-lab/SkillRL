@@ -306,7 +306,7 @@ class TextDAggerAgent(BaseAgent):
                     score, n = nodes_queue.get()
                     __input_target_list = n.input_target
 
-                    if (n.input_target[-1] == self.word2id["[SEP]"] or n.length >= self.max_target_length) and n.previous_node != None:
+                    if (n.input_target[-1] == self.word2id["[SEP]"] or n.length >= self.max_target_length) and n.previous_node is not None:
                         ended_nodes.append((score, n))
                         # if we reached maximum # of sentences required
                         if len(ended_nodes) >= generate_top_k:

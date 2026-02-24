@@ -299,7 +299,7 @@ class TaskGameState(PlannedGameState):
             self.toggle_target = None
 
             # find all valid receptacles in which rand_chosen object or rand chosen moveable receptacle can be placed
-            val_receptacle_objects_orig = [r for r in receptacle_objects if (self.rand_chosen_val_moveable_recep_class if self.mrecep_target != None else self.rand_chosen_object_class)
+            val_receptacle_objects_orig = [r for r in receptacle_objects if (self.rand_chosen_val_moveable_recep_class if self.mrecep_target is not None else self.rand_chosen_object_class)
                                       in constants.VAL_RECEPTACLE_OBJECTS[r['objectType']]]
             _, recep_crit = self.get_filter_crit(constants.pddl_goal_type)
             val_receptacle_objects = list(filter(recep_crit, val_receptacle_objects_orig))

@@ -425,7 +425,7 @@ class TaskGameStateFullKnowledge(TaskGameState):
         elif action['action'] == 'SliceObject':
             pass
 
-        visible_objects = self.event.instance_detections2D.keys() if self.event.instance_detections2D != None else []
+        visible_objects = self.event.instance_detections2D.keys() if self.event.instance_detections2D is not None else []
         for obj in visible_objects:
             obj = game_util.get_object(obj, self.env.last_event.metadata)
             if obj is None:

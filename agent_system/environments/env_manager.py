@@ -616,7 +616,7 @@ class WebshopEnvironmentManager(EnvironmentManagerBase):
             try:
                 index = parts.index(self.tasks[i])
                 reformatted_obs = " [SEP] ".join(f"'{p}'" for p in parts[index+1:])
-            except:
+            except ValueError:
                 reformatted_obs = text_obs[i]
 
             postprocess_text_obs.append(reformatted_obs)
