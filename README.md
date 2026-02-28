@@ -26,7 +26,7 @@ SkillRL is a framework that enables LLM agents to learn high-level, reusable beh
 
 - **Hierarchical SKILLBANK**: Organizes knowledge into General Skills for universal strategic guidance and Task-Specific Skills for category-level heuristics.
 
-- **Recursive Skill Evolution**: A dynamic mechanism where the skill library co-evolves with the agent's policy during RL by analyzing validation failures.
+- **Recursive Skill Evolution**: A dynamic mechanism where the skill library co-evolves with the agent's policy during RL by analyzing training failures.
 
 - **Context Efficiency**: Achieves 10-20% token compression compared to raw trajectory storage while enhancing reasoning utility. 
 
@@ -194,8 +194,9 @@ All parameters live under `env.skills_only_memory.*` (Hydra / OmegaConf).
 | `embedding_model_path` | str | `"Qwen/Qwen3-Embedding-0.6B"` | Local path or HF model ID.  Only used when `retrieval_mode=embedding`. |
 | `top_k` | int | `6` | Number of general skills injected per episode. |
 | `task_specific_top_k` | int | `None` | Max task-specific skills per episode.  `None` = all (template) / same as `top_k` (embedding). |
-| `enable_dynamic_update` | bool | `False` | Evolve the skill bank during training using validation failures. |
-| `update_threshold` | float | `0.4` | Min success rate below which skills are updated. |
+| `enable_dynamic_update` | bool | `False` | Evolve the skill bank during training using training failures. |
+| `update_threshold` | float | `0.4` | Min training success rate below which skills are updated. |
+| `train_update_interval` | int | `20` | Number of training steps between update checks.  Falls back to `update_interval` if unset. |
 | `max_new_skills` | int | `3` | Maximum new skills added per update cycle. |
 ---
 
