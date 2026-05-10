@@ -38,7 +38,6 @@ python3 -m verl.trainer.main_ppo \
     data.return_raw_chat=True \
     actor_rollout_ref.model.path=$MODEL_PATH \
     actor_rollout_ref.model.trust_remote_code=True \
-    actor_rollout_ref.model.override_config.enable_thinking=false \
     actor_rollout_ref.actor.optim.lr=1e-6 \
     actor_rollout_ref.actor.optim.lr_warmup_steps_ratio=0.1 \
     actor_rollout_ref.model.use_remove_padding=True \

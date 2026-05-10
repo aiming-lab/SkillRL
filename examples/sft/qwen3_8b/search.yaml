@@ -1,0 +1,35 @@
+### Model
+model_name_or_path: /inspire/hdd/project/multi-agent/czxs253130170/SHINE/models/Qwen3-8B
+trust_remote_code: true
+
+### Method
+stage: sft
+do_train: true
+finetuning_type: full
+
+### Dataset
+dataset: skillrl_search_sft
+template: qwen3
+cutoff_len: 8192
+max_samples: 100000
+overwrite_cache: true
+preprocessing_num_workers: 8
+
+### Output
+output_dir: /inspire/hdd/project/multi-agent/czxs253130170/checkpoints/qwen3-8b-sft-search
+logging_steps: 10
+save_steps: 500
+save_total_limit: 3
+overwrite_output_dir: true
+
+### Train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 16
+learning_rate: 1.0e-5
+num_train_epochs: 3.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+ddp_timeout: 180000000
+flash_attn: fa2
+gradient_checkpointing: true
