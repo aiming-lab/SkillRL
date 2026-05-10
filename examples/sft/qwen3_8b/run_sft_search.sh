@@ -1,19 +1,28 @@
 #!/bin/bash
-set -x
+set -e
 
-# Paths — adjust if your layout differs
 LLAMAFACTORY_DIR="/inspire/hdd/project/multi-agent/czxs253130170/LLaMA-Factory"
-PYTHON="/inspire/hdd/project/multi-agent/czxs253130170/SHINE/shine_env/bin/python3"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOG_DIR="$LLAMAFACTORY_DIR/logs/sft"
+LOG_FILE="$LOG_DIR/search_$(date +%Y%m%d_%H%M%S).log"
 
+mkdir -p "$LOG_DIR"
+
+export WANDB_MODE=offline
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
-# dataset_info.json in LLaMA-Factory must contain 'skillrl_search_sft' entry pointing to:
-#   /inspire/hdd/project/multi-agent/czxs253130170/SkillRL/SkillRL-SFT-Data/search/search.jsonl
+echo "Log: $LOG_FILE"
+echo "Starting Search SFT at $(date)" | tee "$LOG_FILE"
 
-torchrun \
-    --nproc_per_node=8 \
-    --master_port=29501 \
-    "$LLAMAFACTORY_DIR/src/llamafactory/launcher.py" \
-    "$SCRIPT_DIR/search.yaml" \
-    "$@"
+cd "$LLAMAFACTORY_DIR"
+
+cp "$SCRIPT_DIR/search.yaml" examples/train_full/qwen3_8b_skillrl_search_full.yaml
+
+nohup llamafactory-cli train examples/train_full/qwen3_8b_skillrl_search_full.yaml \
+    "$@" \
+    2>&1 | tee -a "$LOG_FILE" &
+
+PID=$!
+echo $PID > "$LOG_DIR/search_sft.pid"
+echo "Launched PID=$PID — tail log with:"
+echo "  tail -f $LOG_FILE"

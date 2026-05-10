@@ -16,16 +16,19 @@ overwrite_cache: true
 preprocessing_num_workers: 8
 
 ### Output
+# Checkpoint: one subdir per epoch, keep last 3
 output_dir: /inspire/hdd/project/multi-agent/czxs253130170/checkpoints/qwen3-8b-sft-search
 logging_steps: 10
-save_steps: 500
+save_steps: 100
 save_total_limit: 3
 overwrite_output_dir: true
 
-### Train
-per_device_train_batch_size: 1
-gradient_accumulation_steps: 16
-learning_rate: 1.0e-5
+### Train  (aligned with SkillRL paper SFT: 3 epochs, lr=2e-5, cosine, warmup 10%)
+# Effective batch = 8 GPUs × 2 per-device × 8 grad_accum = 128
+# Search SFT data → ~3 epochs full training
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 8
+learning_rate: 2.0e-5
 num_train_epochs: 3.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1
@@ -33,3 +36,4 @@ bf16: true
 ddp_timeout: 180000000
 flash_attn: fa2
 gradient_checkpointing: true
+deepspeed: examples/deepspeed/ds_z3_config.json
