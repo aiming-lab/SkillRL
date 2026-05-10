@@ -16,19 +16,18 @@ overwrite_cache: true
 preprocessing_num_workers: 8
 
 ### Output
-# Checkpoint: one subdir per epoch, keep last 3
 output_dir: /inspire/hdd/project/multi-agent/czxs253130170/checkpoints/qwen3-8b-sft-alfworld
 logging_steps: 10
 save_steps: 100
 save_total_limit: 3
 overwrite_output_dir: true
 
-### Train  (aligned with SkillRL paper SFT: 3 epochs, lr=2e-5, cosine, warmup 10%)
-# Effective batch = 8 GPUs × 2 per-device × 8 grad_accum = 128
-# ALFWorld SFT data: 7486 examples → ~175 steps/epoch → 525 steps total
+### Train — exact values from SkillRL paper Table 4 (Appendix B.1)
+# lr=1e-4, batch=16, epochs=3, ~7500 examples
+# Effective batch = 8 GPUs × 2 per-device × 1 grad_accum = 16
 per_device_train_batch_size: 2
-gradient_accumulation_steps: 8
-learning_rate: 2.0e-5
+gradient_accumulation_steps: 1
+learning_rate: 1.0e-4
 num_train_epochs: 3.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1
