@@ -303,7 +303,8 @@ class Config:
 
 
 class QueryRequest(BaseModel):
-    queries: List[str]  # batch of queries (client sends "queries" not "query")
+    query: Optional[str] = None       # from skyrl tool (single query)
+    queries: Optional[List[str]] = None  # from verl tool (batch queries)
     topk: Optional[int] = None
     return_scores: bool = False
 
@@ -316,23 +317,21 @@ _retrieve_lock = threading.Semaphore(1)
 
 @app.post("/retrieve")
 def retrieve_endpoint(request: QueryRequest):
-    """
-    Endpoint that accepts a batch of queries and performs retrieval.
-    Input format:
-    {
-      "queries": ["What is Python?", "Who invented the telephone?"],
-      "topk": 3,
-      "return_scores": true
-    }
-    """
     topk = request.topk if request.topk else config.retrieval_topk
 
-    # Batch search: encode all queries together, one FAISS call
+    # Support both single "query" (skyrl tool) and batch "queries" (verl tool)
+    if request.queries:
+        query_list = request.queries
+    elif request.query:
+        query_list = [request.query]
+    else:
+        return {"result": [], "error": "Either 'query' or 'queries' must be provided"}
+
     with _retrieve_lock:
         if request.return_scores:
-            results, scores = retriever.batch_search(query_list=request.queries, num=topk, return_score=True)
+            results, scores = retriever.batch_search(query_list=query_list, num=topk, return_score=True)
         else:
-            results = retriever.batch_search(query_list=request.queries, num=topk, return_score=False)
+            results = retriever.batch_search(query_list=query_list, num=topk, return_score=False)
             scores = None
 
     # Format response: one entry per query
