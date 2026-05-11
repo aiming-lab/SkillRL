@@ -1,6 +1,7 @@
 #!/bin/bash
 set -x
 ENGINE=${1:-vllm}
+shift 2>/dev/null || true
 
 export WANDB_MODE=offline
 

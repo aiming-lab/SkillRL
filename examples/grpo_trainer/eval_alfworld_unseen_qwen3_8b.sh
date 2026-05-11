@@ -1,6 +1,7 @@
 #!/bin/bash
 set -x
 ENGINE=${1:-vllm}
+shift 2>/dev/null || true
 
 export VLLM_ATTENTION_BACKEND=FLASH_ATTN
 export WANDB_MODE=offline
