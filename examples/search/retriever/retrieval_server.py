@@ -311,8 +311,8 @@ class QueryRequest(BaseModel):
 
 app = FastAPI()
 
-# Serialize GPU encoding: only one thread at a time calls the encoder+FAISS
-_retrieve_lock = threading.Semaphore(1)
+# Allow up to 4 concurrent searches (GPU encoding + CPU FAISS)
+_retrieve_lock = threading.Semaphore(4)
 
 
 @app.post("/retrieve")

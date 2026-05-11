@@ -57,6 +57,7 @@ python3 -m verl.trainer.main_ppo \
     env.rollout.n=$group_size \
     env.history_length=4 \
     env.search.search_url='http://127.0.0.1:8000/retrieve' \
+    env.search.timeout=300 \
     +env.use_skills_only_memory=True \
     +env.skills_only_memory.skills_json_path=memory_data/search/claude_style_skills_search.json \
     +env.skills_only_memory.top_k=6 \
