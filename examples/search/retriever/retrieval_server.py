@@ -198,10 +198,11 @@ class DenseRetriever(BaseRetriever):
         super().__init__(config)
         self.index = faiss.read_index(self.index_path)
         if config.faiss_gpu:
-            co = faiss.GpuMultipleClonerOptions()
+            res = faiss.StandardGpuResources()
+            res.setTempMemory(0)  # let CUDA manage memory directly, avoids contiguous alloc failure
+            co = faiss.GpuClonerOptions()
             co.useFloat16 = True
-            co.shard = True
-            self.index = faiss.index_cpu_to_all_gpus(self.index, co=co)
+            self.index = faiss.index_cpu_to_gpu(res, 0, self.index, co)
 
         self.corpus = load_corpus(self.corpus_path)
         self.encoder = Encoder(
