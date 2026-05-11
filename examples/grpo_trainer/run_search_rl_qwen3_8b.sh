@@ -8,10 +8,10 @@ export MODEL_PATH=${MODEL_PATH:-/inspire/hdd/project/multi-agent/czxs253130170/c
 export WANDB_NAME="search_grpo_qwen3_8b_skills_from_mixed_sft"
 
 train_data_size=256
-val_data_size=512
-group_size=4
+val_data_size=64
+group_size=2
 
-TRAIN_DATA=/inspire/hdd/project/multi-agent/czxs253130170/data/searchR1_processed_direct/train.parquet
+TRAIN_DATA=/inspire/hdd/project/multi-agent/czxs253130170/data/searchR1_processed_direct/train_small.parquet
 VAL_DATA=/inspire/hdd/project/multi-agent/czxs253130170/data/searchR1_processed_direct/test.parquet
 
 python3 -m verl.trainer.main_ppo \
@@ -37,15 +37,15 @@ python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.actor.kl_loss_type=low_var_kl \
     actor_rollout_ref.actor.entropy_coeff=0 \
     actor_rollout_ref.model.enable_gradient_checkpointing=True \
-    actor_rollout_ref.actor.fsdp_config.param_offload=False \
+    actor_rollout_ref.actor.fsdp_config.param_offload=True \
     actor_rollout_ref.actor.fsdp_config.optimizer_offload=False \
     actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=32 \
     actor_rollout_ref.rollout.tensor_model_parallel_size=1 \
     actor_rollout_ref.rollout.name=$ENGINE \
     actor_rollout_ref.rollout.gpu_memory_utilization=0.4 \
     actor_rollout_ref.rollout.enable_chunked_prefill=False \
-    actor_rollout_ref.rollout.enforce_eager=False \
-    actor_rollout_ref.rollout.free_cache_engine=False \
+    actor_rollout_ref.rollout.enforce_eager=True \
+    actor_rollout_ref.rollout.free_cache_engine=True \
     actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=32 \
     actor_rollout_ref.ref.fsdp_config.param_offload=True \
     actor_rollout_ref.actor.use_invalid_action_penalty=True \
@@ -68,5 +68,5 @@ python3 -m verl.trainer.main_ppo \
     trainer.nnodes=1 \
     trainer.save_freq=5 \
     trainer.test_freq=200 \
-    trainer.total_epochs=100 \
+    trainer.total_epochs=20 \
     trainer.val_before_train=False $@
