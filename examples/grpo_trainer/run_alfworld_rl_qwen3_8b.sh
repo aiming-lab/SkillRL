@@ -45,8 +45,8 @@ python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.rollout.name=$ENGINE \
     actor_rollout_ref.rollout.gpu_memory_utilization=0.5 \
     actor_rollout_ref.rollout.enable_chunked_prefill=True \
-    actor_rollout_ref.rollout.enforce_eager=False \
-    actor_rollout_ref.rollout.free_cache_engine=False \
+    actor_rollout_ref.rollout.enforce_eager=True \
+    actor_rollout_ref.rollout.free_cache_engine=True \
     actor_rollout_ref.rollout.max_num_batched_tokens=8192 \
     actor_rollout_ref.rollout.max_num_seqs=512 \
     actor_rollout_ref.rollout.val_kwargs.temperature=0.4 \
@@ -64,7 +64,7 @@ python3 -m verl.trainer.main_ppo \
     +env.use_skills_only_memory=True \
     +env.skills_only_memory.skills_json_path=memory_data/alfworld/claude_style_skills.json \
     +env.skills_only_memory.top_k=6 \
-    +env.skills_only_memory.enable_dynamic_update=True \
+    +env.skills_only_memory.enable_dynamic_update=False \
     +env.skills_only_memory.update_threshold=0.4 \
     +env.skills_only_memory.max_new_skills=3 \
     trainer.critic_warmup=0 \
