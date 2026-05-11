@@ -1,5 +1,6 @@
 import json
 import warnings
+import threading
 from typing import List, Optional
 import argparse
 
@@ -309,6 +310,9 @@ class QueryRequest(BaseModel):
 
 app = FastAPI()
 
+# Serialize GPU encoding: only one thread at a time calls the model/FAISS
+_retrieve_lock = threading.Semaphore(1)
+
 
 @app.post("/retrieve")
 def retrieve_endpoint(request: QueryRequest):
@@ -324,12 +328,13 @@ def retrieve_endpoint(request: QueryRequest):
     if not request.topk:
         request.topk = config.retrieval_topk  # fallback to default
 
-    # Perform retrieval
-    if request.return_scores:
-        results, scores = retriever.search(query=request.query, num=request.topk, return_score=True)
-    else:
-        results = retriever.search(query=request.query, num=request.topk, return_score=False)
-        scores = None
+    # Perform retrieval (serialized to avoid concurrent GPU contention)
+    with _retrieve_lock:
+        if request.return_scores:
+            results, scores = retriever.search(query=request.query, num=request.topk, return_score=True)
+        else:
+            results = retriever.search(query=request.query, num=request.topk, return_score=False)
+            scores = None
 
     # Format response
     resp = []
