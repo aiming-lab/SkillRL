@@ -1,0 +1,38 @@
+### Model
+model_name_or_path: /inspire/hdd/project/multi-agent/czxs253130170/SHINE/models/Qwen3-8B
+trust_remote_code: true
+
+### Method
+stage: sft
+do_train: true
+finetuning_type: full
+
+### Dataset — comma-separated, LLaMA-Factory merges automatically
+dataset: skillrl_alfworld_sft,skillrl_search_sft
+template: qwen3
+cutoff_len: 8192
+max_samples: 100000
+overwrite_cache: true
+preprocessing_num_workers: 8
+
+### Output
+output_dir: /inspire/hdd/project/multi-agent/czxs253130170/checkpoints/qwen3-8b-sft-mixed
+logging_steps: 10
+save_steps: 100
+save_total_limit: 3
+overwrite_output_dir: true
+
+### Train — SkillRL paper Table 4 (Appendix B.1)
+# lr=1e-4, batch=16, epochs=3
+# Effective batch = 7 GPUs × 2 per-device × 1 grad_accum = 14 (≈16)
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 1
+learning_rate: 1.0e-4
+num_train_epochs: 3.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+ddp_timeout: 180000000
+flash_attn: fa2
+gradient_checkpointing: true
+deepspeed: examples/deepspeed/ds_z3_config.json
