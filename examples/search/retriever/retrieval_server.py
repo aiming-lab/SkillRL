@@ -303,50 +303,46 @@ class Config:
 
 
 class QueryRequest(BaseModel):
-    query: str
+    queries: List[str]  # batch of queries (client sends "queries" not "query")
     topk: Optional[int] = None
     return_scores: bool = False
 
 
 app = FastAPI()
 
-# Serialize GPU encoding: only one thread at a time calls the model/FAISS
+# Serialize GPU encoding: only one thread at a time calls the encoder+FAISS
 _retrieve_lock = threading.Semaphore(1)
 
 
 @app.post("/retrieve")
 def retrieve_endpoint(request: QueryRequest):
     """
-    Endpoint that accepts a single query and performs retrieval.
+    Endpoint that accepts a batch of queries and performs retrieval.
     Input format:
     {
-      "query": "What is Python?",
+      "queries": ["What is Python?", "Who invented the telephone?"],
       "topk": 3,
       "return_scores": true
     }
     """
-    if not request.topk:
-        request.topk = config.retrieval_topk  # fallback to default
+    topk = request.topk if request.topk else config.retrieval_topk
 
-    # Perform retrieval (serialized to avoid concurrent GPU contention)
+    # Batch search: encode all queries together, one FAISS call
     with _retrieve_lock:
         if request.return_scores:
-            results, scores = retriever.search(query=request.query, num=request.topk, return_score=True)
+            results, scores = retriever.batch_search(query_list=request.queries, num=topk, return_score=True)
         else:
-            results = retriever.search(query=request.query, num=request.topk, return_score=False)
+            results = retriever.batch_search(query_list=request.queries, num=topk, return_score=False)
             scores = None
 
-    # Format response
+    # Format response: one entry per query
     resp = []
-    if request.return_scores and scores is not None:
-        # If scores are returned, combine them with results
-        combined = []
-        for doc, score in zip(results, scores):
-            # Convert numpy float32 to regular Python float for JSON serialization
-            combined.append({"document": doc, "score": float(score)})
-        resp.append(combined)
-    else:
-        resp.append(results)
+    for i, query_results in enumerate(results):
+        if request.return_scores and scores is not None:
+            combined = [{"document": doc, "score": float(score)} for doc, score in zip(query_results, scores[i])]
+            resp.append(combined)
+        else:
+            resp.append(query_results)
     return {"result": resp}
 
 
