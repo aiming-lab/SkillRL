@@ -7,11 +7,11 @@ export WANDB_MODE=offline
 export MODEL_PATH=${MODEL_PATH:-/inspire/hdd/project/multi-agent/czxs253130170/checkpoints/qwen3-8b-sft-mixed}
 export WANDB_NAME="search_grpo_qwen3_8b_skills_from_mixed_sft"
 
-train_data_size=256
-val_data_size=64
-group_size=2
+train_data_size=16
+val_data_size=32
+group_size=1
 
-TRAIN_DATA=/inspire/hdd/project/multi-agent/czxs253130170/data/searchR1_processed_direct/train_small.parquet
+TRAIN_DATA=/inspire/hdd/project/multi-agent/czxs253130170/data/searchR1_processed_direct/train.parquet
 VAL_DATA=/inspire/hdd/project/multi-agent/czxs253130170/data/searchR1_processed_direct/test.parquet
 
 python3 -m verl.trainer.main_ppo \
@@ -30,8 +30,8 @@ python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.actor.optim.lr=1e-6 \
     actor_rollout_ref.actor.optim.lr_warmup_steps_ratio=0.1 \
     actor_rollout_ref.model.use_remove_padding=True \
-    actor_rollout_ref.actor.ppo_mini_batch_size=256 \
-    actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=8 \
+    actor_rollout_ref.actor.ppo_mini_batch_size=16 \
+    actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=4 \
     actor_rollout_ref.actor.use_kl_loss=True \
     actor_rollout_ref.actor.kl_loss_coef=0.001 \
     actor_rollout_ref.actor.kl_loss_type=low_var_kl \
