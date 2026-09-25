@@ -12,6 +12,7 @@ Bridging the gap between raw experience and policy improvement through automatic
 
 ## 🔥 News
 
+- **[09/24/2026]** SkillRL was accepted at NeurIPS 2026! See you in 🌊 Atlanta!
 - **[05/10/2026]** Released the code for SFT data generation under `examples/sft_data_generation/`.
 - **[04/03/2026]** Released the SFT dataset on [🤗HF](https://huggingface.co/datasets/Jianwen/SkillRL-SFT-Data)!
 - **[03/02/2026]** Due to an accidental misconfiguration, we lost several hundred GitHub stars. If you previously starred this repo, we'd appreciate a re-star ⭐!
