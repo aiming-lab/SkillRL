@@ -29,8 +29,85 @@ Supports two retrieval modes:
 
 import json
 import os
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from .base import BaseMemory
+
+
+# Keys a Claude-style SkillBank may carry.  ALFWorld/WebShop group their
+# category skills under ``task_specific_skills``; Search uses
+# ``query_type_skills``.  A bank is not required to carry every key.
+_BANK_LIST_KEYS = ("general_skills", "common_mistakes")
+_BANK_MAP_KEYS = ("task_specific_skills", "query_type_skills")
+_BANK_KEYS = _BANK_LIST_KEYS + _BANK_MAP_KEYS + ("metadata",)
+
+
+def atomic_write_json(path: str, payload: Any) -> None:
+    """Write ``payload`` as JSON to ``path`` atomically.
+
+    Serialises to a temp file in the same directory, fsyncs it, then
+    ``os.replace()`` onto the target, so an interrupted write can never leave a
+    truncated file at ``path``.  The containing directory is deliberately not
+    fsynced: that only matters for a kernel crash, not a process crash, and it
+    is not portable to Windows.
+    """
+    directory = os.path.dirname(os.path.abspath(path))
+    os.makedirs(directory, exist_ok=True)
+    tmp_path = f"{path}.tmp"
+    try:
+        with open(tmp_path, "w") as f:
+            json.dump(payload, f, indent=2)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_path, path)
+    except BaseException:
+        try:
+            os.remove(tmp_path)
+        except OSError:
+            pass
+        raise
+
+
+def validate_skills_bank(bank: Any) -> Tuple[bool, str]:
+    """Structural check for a SkillBank, mirroring the shipped ``memory_data`` files.
+
+    Returns ``(ok, reason)``.  Only the types the memory class actually indexes
+    are constrained; nothing a legitimate bank may omit is required, but a bank
+    with no known keys or no content at all is rejected rather than silently
+    restored as an empty library.
+    """
+    if not isinstance(bank, dict):
+        return False, "skill bank is not a JSON object"
+
+    if not any(key in bank for key in _BANK_KEYS):
+        return False, f"skill bank has none of the known keys {list(_BANK_KEYS)}"
+
+    n_items = 0
+    for key in _BANK_LIST_KEYS:
+        if key in bank:
+            items = bank[key]
+            if not isinstance(items, list):
+                return False, f"'{key}' must be a list"
+            if any(not isinstance(s, dict) for s in items):
+                return False, f"'{key}' must contain only objects"
+            n_items += len(items)
+
+    for key in _BANK_MAP_KEYS:
+        if key in bank:
+            groups = bank[key]
+            if not isinstance(groups, dict):
+                return False, f"'{key}' must be an object of category lists"
+            for category, items in groups.items():
+                if not isinstance(items, list) or any(not isinstance(s, dict) for s in items):
+                    return False, f"'{key}.{category}' must be a list of objects"
+                n_items += len(items)
+
+    if "metadata" in bank and not isinstance(bank["metadata"], dict):
+        return False, "'metadata' must be an object"
+
+    if n_items == 0:
+        return False, "skill bank contains no skills or mistakes"
+
+    return True, ""
 
 
 class SkillsOnlyMemory(BaseMemory):
@@ -525,11 +602,29 @@ class SkillsOnlyMemory(BaseMemory):
         return removed
 
     def save_skills(self, path: str):
-        """Persist the current skill bank to a JSON file."""
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, 'w') as f:
-            json.dump(self.skills, f, indent=2)
+        """Persist the current skill bank to a JSON file (atomically)."""
+        atomic_write_json(path, self.skills)
         print(f"[SkillsOnlyMemory] Saved {len(self)} skills to {path}")
+
+    def load_skills(self, path: str):
+        """Replace the skill bank with one previously written by :meth:`save_skills`.
+
+        The file is parsed and validated before ``self.skills`` is reassigned, so
+        a missing, truncated, or schema-incompatible file always leaves the live
+        bank untouched.  Raises ``FileNotFoundError`` when absent and
+        ``ValueError`` when it cannot be parsed or is not a valid bank; the
+        embedding cache is derived state and is dropped, never serialised.
+        """
+        with open(path, "r") as f:
+            loaded = json.load(f)
+
+        ok, reason = validate_skills_bank(loaded)
+        if not ok:
+            raise ValueError(f"Invalid skill bank at {path}: {reason}")
+
+        self.skills = loaded
+        self._skill_embeddings_cache = None
+        print(f"[SkillsOnlyMemory] Loaded {len(self)} skills from {path}")
 
     def _get_all_skill_ids(self) -> set:
         ids = set()
