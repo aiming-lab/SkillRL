@@ -1210,6 +1210,111 @@ class RayPPOTrainer:
                 worker_group=self.actor_rollout_wg,
             )
 
+    # The SkillBank co-evolves with the policy during fit(), so it is part of the
+    # state a resumed run needs. It is snapshotted inside global_step_N and
+    # restored on resume. The checkpoint-state marker written alongside it tells a
+    # resume whether the SkillBank is required: no marker means a checkpoint from
+    # before this state contract, a marker without a valid bank means a hard
+    # failure rather than resuming a trained policy against a different library.
+
+    SKILLBANK_CHECKPOINT_FILENAME = "skillbank.json"
+    CHECKPOINT_STATE_FILENAME = "checkpoint_state.json"
+    CHECKPOINT_STATE_VERSION = 1
+
+    def _training_skillbank_memory(self):
+        """The training retrieval memory, if it can save and load a SkillBank.
+
+        Capability check rather than isinstance. Validation memory is never
+        returned or consulted here: evolved training skills must not leak into
+        validation, and validation state is not something to restore.
+        """
+        memory = getattr(getattr(self, "envs", None), "retrieval_memory", None)
+        if memory is None:
+            return None
+        if (isinstance(getattr(memory, "skills", None), dict)
+                and callable(getattr(memory, "save_skills", None))
+                and callable(getattr(memory, "load_skills", None))):
+            return memory
+        return None
+
+    def _save_skillbank_checkpoint(self, local_global_step_folder: str):
+        """Snapshot the training SkillBank, then mark the checkpoint complete.
+
+        Called before ``latest_checkpointed_iteration.txt`` advances, and it does
+        not swallow failures: if the SkillBank or the marker cannot be persisted
+        this raises, so a checkpoint missing required adaptive state is never
+        advertised as complete. Runs without a restorable SkillBank write no
+        marker at all and keep the existing checkpoint behaviour.
+        """
+        # Imported here rather than at module scope, like SkillUpdater below:
+        # agent_system.memory eagerly pulls in the embedding/faiss-backed
+        # RetrievalMemory, which this module does not otherwise require.
+        from agent_system.memory.skills_only_memory import atomic_write_json
+
+        memory = self._training_skillbank_memory()
+        if memory is None:
+            return None
+
+        bank_path = os.path.join(local_global_step_folder, self.SKILLBANK_CHECKPOINT_FILENAME)
+        memory.save_skills(bank_path)
+        atomic_write_json(
+            os.path.join(local_global_step_folder, self.CHECKPOINT_STATE_FILENAME),
+            {
+                "skillrl_checkpoint_state_version": self.CHECKPOINT_STATE_VERSION,
+                "skillbank_required": True,
+            },
+        )
+        print(f"[SkillBankCheckpoint] Saved training SkillBank ({len(memory)} skills) "
+              f"for step {self.global_steps}")
+        return bank_path
+
+    def _load_skillbank_checkpoint(self, global_step_folder: str):
+        """Restore the checkpoint's SkillBank into the training retrieval memory.
+
+        No marker and no snapshot means a checkpoint from before this state
+        contract: the configured ``skills_json_path`` bank is kept, as before.
+        Otherwise the SkillBank is required, and anything short of a valid,
+        restorable bank raises, so a trained policy is never resumed against a
+        different library.
+        """
+        marker_path = os.path.join(global_step_folder, self.CHECKPOINT_STATE_FILENAME)
+        bank_path = os.path.join(global_step_folder, self.SKILLBANK_CHECKPOINT_FILENAME)
+        if not os.path.exists(marker_path):
+            if os.path.exists(bank_path):
+                # A snapshot with no marker can only mean the save died between the
+                # two writes; treating it as a legacy checkpoint would silently
+                # resume this policy against the configured bank instead.
+                raise RuntimeError(
+                    f"{global_step_folder} has {self.SKILLBANK_CHECKPOINT_FILENAME} but no "
+                    f"{self.CHECKPOINT_STATE_FILENAME}; this checkpoint is incomplete")
+            print("[SkillBankCheckpoint] No checkpoint-state marker; keeping the configured "
+                  "SkillBank (checkpoint predates SkillBank checkpointing)")
+            return False
+
+        with open(marker_path, "r") as f:
+            marker = json.load(f)
+        version = marker.get("skillrl_checkpoint_state_version") if isinstance(marker, dict) else None
+        if version != self.CHECKPOINT_STATE_VERSION:
+            raise RuntimeError(
+                f"Unsupported SkillRL checkpoint-state version {version!r} in {marker_path}")
+        if not marker.get("skillbank_required", False):
+            return False
+
+        memory = self._training_skillbank_memory()
+        if memory is None:
+            raise RuntimeError(
+                f"{global_step_folder} requires a training SkillBank, but this run has no "
+                f"restorable skills memory; resume with env.skills_only_memory enabled")
+
+        try:
+            memory.load_skills(bank_path)
+        except (OSError, ValueError) as e:
+            raise RuntimeError(
+                f"Cannot restore the required SkillBank for {global_step_folder}: {e}") from e
+        print(f"[SkillBankCheckpoint] Restored training SkillBank ({len(memory)} skills) "
+              f"for step {self.global_steps}")
+        return True
+
     def _save_checkpoint(self):
         # path: given_path + `/global_step_{global_steps}` + `/actor`
         local_global_step_folder = os.path.join(self.config.trainer.default_local_dir, f"global_step_{self.global_steps}")
@@ -1236,6 +1341,10 @@ class RayPPOTrainer:
         dataloader_local_path = os.path.join(local_global_step_folder, "data.pt")
         dataloader_state_dict = self.train_dataloader.state_dict()
         torch.save(dataloader_state_dict, dataloader_local_path)
+
+        # Persist the co-evolved SkillBank and its state marker before the
+        # tracker below advertises this step as a complete checkpoint.
+        self._save_skillbank_checkpoint(local_global_step_folder)
 
         # latest checkpointed iteration tracker (for atomic usage)
         local_latest_checkpointed_iteration = os.path.join(self.config.trainer.default_local_dir, "latest_checkpointed_iteration.txt")
@@ -1292,6 +1401,10 @@ class RayPPOTrainer:
             self.train_dataloader.load_state_dict(dataloader_state_dict)
         else:
             print(f"Warning: No dataloader state found at {dataloader_local_path}, will start from scratch")
+
+        # Restore the SkillBank that co-evolved with this policy. Older
+        # checkpoints carry no marker and keep the configured bank unchanged.
+        self._load_skillbank_checkpoint(global_step_folder)
 
     def _balance_batch(self, batch: DataProto, metrics, logging_prefix="global_seqlen"):
         """Reorder the data on single controller such that each dp rank gets similar total tokens"""
